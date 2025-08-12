@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectTrigger, SelectValue, SelectItem } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { Controller, useForm } from "react-hook-form";
 import { addProductFormSchema } from "@/app/(pages)/add-product/add-product-form-schema";
+import addProductAction from "./add-product-action";
 
 export function AddProductForm() {
   type SchemaInput = z.input<typeof addProductFormSchema>;
@@ -18,8 +19,13 @@ export function AddProductForm() {
     resolver: zodResolver(addProductFormSchema)
   })
 
-  function onSubmit(data: SchemaInput) {
-    console.log("Form submitted with data:", data);
+  async function onSubmit(data: SchemaInput) {
+    const parsedData = addProductFormSchema.safeParse(data);
+    
+    if (parsedData.success) {
+      await addProductAction(parsedData.data)
+      form.reset();
+    }
   } 
 
   return (
@@ -43,7 +49,7 @@ export function AddProductForm() {
             </div>
             <div className="space-y-2 w-full">
               <Label>Category</Label>
-              <Controller name="category" control={form.control} render={({ field }) => (
+              <Controller name="category" defaultValue="uncategorized" control={form.control} render={({ field }) => (
                   <Select onValueChange={field.onChange} value={field.value}>
                     <SelectTrigger className="w-full">
                       <SelectValue placeholder="Select a category" />
