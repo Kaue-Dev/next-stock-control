@@ -16,7 +16,6 @@ model Product {
   minStock      Int
   maxStock      Int
   price         Float
-  description   String?
   category      String   @default("Uncategorized")
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
