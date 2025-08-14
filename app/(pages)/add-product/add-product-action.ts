@@ -7,8 +7,22 @@ import z from "zod";
 type ProductData = z.infer<typeof addProductFormSchema>;
 
 export default async function addProductAction(data: ProductData) {
+
+  const productSkuAlreadyExists = await db.product.findUnique({
+    where: {
+      sku: data.sku,
+    },
+  });
+
+  if (productSkuAlreadyExists) {
+    return {
+      success: false,
+      message: "Product with this SKU already exists."
+    }
+  }
+
   try {
-    const product = await db.product.create({
+    await db.product.create({
       data: {
         name: data.name,
         sku: data.sku,
@@ -16,21 +30,19 @@ export default async function addProductAction(data: ProductData) {
         minStock: data.minStock,
         maxStock: data.maxStock,
         price: data.price,
-        description: data.description || "",
         category: data.category,
       }
-    })
+    });
 
-    return { 
-      success: true, 
-      product 
+    return {
+      success: true,
+      message: "Product added successfully!"
     };
 
   } catch (error) {
-    console.error("Error adding product:", error);
-    return { 
-      success: false, 
-      message: "Failed to add product" 
+    return {
+      success: false,
+      message: "Failed to add product"
     };
   }
 }
