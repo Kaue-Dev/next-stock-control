@@ -24,17 +24,5 @@ export const addProductFormSchema = z.object({
   .nonnegative("Maximum stock cannot be negative")
   .min(1, "This field is required"),
 })
-.refine((data) => data.stockQuantity >= data.minStock, {
-  message: "Stock quantity must be greater than minimum stock",
-  path: ["stockQuantity"],
-})
-.refine((data) => data.stockQuantity <= data.maxStock, {
-  message: "Stock quantity must be less than maximum stock",
-  path: ["stockQuantity"],
-})
-.refine((data) => data.minStock <= data.maxStock, {
-  message: "Minimum stock must be less than maximum stock",
-  path: ["minStock"],
-})
 
 export type addProductFormSchemaType = z.infer<typeof addProductFormSchema>;
