@@ -12,7 +12,7 @@ export const addProductFormSchema = z.object({
   stockQuantity: z.coerce.number()
   .int("Stock quantity must be an integer")
   .nonnegative("Stock quantity cannot be negative")
-  .min(1, "This field is required"),
+  .min(0, "This field is required"),
 
   minStock: z.coerce.number()
   .int("Minimum stock must be an integer")
