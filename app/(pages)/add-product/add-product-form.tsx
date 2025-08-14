@@ -44,7 +44,6 @@ export function AddProductForm() {
 
   return (
     <Card className="w-full max-w-xl">
-      <Button onClick={handleShowSuccessToast}>clique</Button>
       <CardContent>
         <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
           <div className="space-y-2">
