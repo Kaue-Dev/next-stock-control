@@ -11,8 +11,21 @@ import { Textarea } from "@/components/ui/textarea";
 import { Controller, useForm } from "react-hook-form";
 import { addProductFormSchema } from "@/app/(pages)/add-product/add-product-form-schema";
 import addProductAction from "./add-product-action";
+import { toast } from "sonner";
+import { useState } from "react";
 
 export function AddProductForm() {
+  const [_showSuccessToast, setShowSuccessToast] = useState<boolean>(false);
+
+  function handleShowSuccessToast() {
+    setShowSuccessToast(true);
+    toast.success("Product added successfully!", {
+      description: "Your product has been added to the stock.",
+      duration: 3000,
+      position: "top-right",
+    })
+  }
+
   type SchemaInput = z.input<typeof addProductFormSchema>;
 
   const form = useForm<SchemaInput>({
@@ -24,12 +37,14 @@ export function AddProductForm() {
     
     if (parsedData.success) {
       await addProductAction(parsedData.data)
+      handleShowSuccessToast();
       form.reset();
     }
   } 
 
   return (
     <Card className="w-full max-w-xl">
+      <Button onClick={handleShowSuccessToast}>clique</Button>
       <CardContent>
         <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
           <div className="space-y-2">
@@ -49,17 +64,17 @@ export function AddProductForm() {
             </div>
             <div className="space-y-2 w-full">
               <Label>Category</Label>
-              <Controller name="category" defaultValue="uncategorized" control={form.control} render={({ field }) => (
+              <Controller name="category" defaultValue="Uncategorized" control={form.control} render={({ field }) => (
                   <Select onValueChange={field.onChange} value={field.value}>
                     <SelectTrigger className="w-full">
                       <SelectValue placeholder="Select a category" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="electronics">Electronics</SelectItem>
-                      <SelectItem value="furniture">Furniture</SelectItem>
-                      <SelectItem value="clothing">Clothing</SelectItem>
-                      <SelectItem value="food">Food</SelectItem>
-                      <SelectItem value="uncategorized">Uncategorized</SelectItem>
+                      <SelectItem value="Electronics">Electronics</SelectItem>
+                      <SelectItem value="Furniture">Furniture</SelectItem>
+                      <SelectItem value="Clothing">Clothing</SelectItem>
+                      <SelectItem value="Food">Food</SelectItem>
+                      <SelectItem value="Uncategorized">Uncategorized</SelectItem>
                     </SelectContent>
                   </Select>
                 )}
