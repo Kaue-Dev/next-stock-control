@@ -36,9 +36,25 @@ export function AddProductForm() {
     const parsedData = addProductFormSchema.safeParse(data);
     
     if (parsedData.success) {
-      await addProductAction(parsedData.data)
-      handleShowSuccessToast();
-      form.reset();
+      const result = await addProductAction(parsedData.data)
+
+      if (result.success) {
+        handleShowSuccessToast();
+        form.reset();
+        return;
+      }
+
+      if (result.message.includes("SKU")) {
+        form.setError("sku", {
+          type: "manual",
+          message: result.message
+        })
+      } else {
+        toast.error(result.message, {
+          position: "top-right",
+          duration: 3000,
+        })
+      }
     }
   } 
 
@@ -114,13 +130,6 @@ export function AddProductForm() {
                 <p className="text-red-500 text-sm">{form.formState.errors.maxStock.message}</p>
               )}
             </div>
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="description">Description</Label>
-            <Textarea id="description" placeholder="Enter product description" {...form.register("description")} />
-            {form.formState.errors.description && (
-              <p className="text-red-500 text-sm">{form.formState.errors.description.message}</p>
-            )}
           </div>
           <Button type="submit" className="w-full cursor-pointer">Add Product</Button>
         </form>
