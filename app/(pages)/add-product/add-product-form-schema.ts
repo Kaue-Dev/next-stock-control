@@ -23,8 +23,6 @@ export const addProductFormSchema = z.object({
   .int("Maximum stock must be an integer")
   .nonnegative("Maximum stock cannot be negative")
   .min(1, "This field is required"),
-
-  description: z.string().optional(),
 })
 .refine((data) => data.stockQuantity >= data.minStock, {
   message: "Stock quantity must be greater than minimum stock",
