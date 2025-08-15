@@ -27,7 +27,6 @@ export function AddProductForm() {
 
       if (result.success) {
         toast.success("Product added successfully!", {
-          description: "Your product has been added to the stock.",
           duration: 3000,
           position: "top-right",
         });
