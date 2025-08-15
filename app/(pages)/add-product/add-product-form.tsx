@@ -11,20 +11,8 @@ import { Controller, useForm } from "react-hook-form";
 import { addProductFormSchema } from "@/app/(pages)/add-product/add-product-form-schema";
 import addProductAction from "./add-product-action";
 import { toast } from "sonner";
-import { useState } from "react";
 
 export function AddProductForm() {
-  const [_showSuccessToast, setShowSuccessToast] = useState<boolean>(false);
-
-  function handleShowSuccessToast() {
-    setShowSuccessToast(true);
-    toast.success("Product added successfully!", {
-      description: "Your product has been added to the stock.",
-      duration: 3000,
-      position: "top-right",
-    })
-  }
-
   type SchemaInput = z.input<typeof addProductFormSchema>;
 
   const form = useForm<SchemaInput>({
@@ -38,7 +26,11 @@ export function AddProductForm() {
       const result = await addProductAction(parsedData.data)
 
       if (result.success) {
-        handleShowSuccessToast();
+        toast.success("Product added successfully!", {
+          description: "Your product has been added to the stock.",
+          duration: 3000,
+          position: "top-right",
+        });
         form.reset();
         return;
       }
